@@ -17,3 +17,7 @@ Organizations often struggle with inconsistent CI/CD practices across teams. Thi
 
 ## Status
 This repo serves as a practical example of GitHub Actions governance and is part of the 12-week preparation plan for GitHub Staff.
+
+## Related
+- [agentic-eval-harness](https://github.com/victoriana/agentic-eval-harness) — evaluated by this template's governance
+- [acrochoreo](https://github.com/victoriana/acrochoreo) — governed by this template
