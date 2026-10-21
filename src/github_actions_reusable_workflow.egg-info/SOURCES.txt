@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+src/github_actions_reusable_workflow.egg-info/PKG-INFO
+src/github_actions_reusable_workflow.egg-info/SOURCES.txt
+src/github_actions_reusable_workflow.egg-info/dependency_links.txt
+src/github_actions_reusable_workflow.egg-info/requires.txt
+src/github_actions_reusable_workflow.egg-info/top_level.txt
+src/reusable_workflow/__init__.py
+tests/test_template.py
