@@ -1,0 +1,30 @@
+name: 'Governance Checks'
+description: 'Install, test, and scan — the org standard'
+inputs:
+  python-version:
+    required: true
+  trivy-severity:
+    required: false
+    default: 'HIGH,CRITICAL'
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
+    - name: Install package
+      run: pip install -e ".[dev]"
+      shell: bash
+
+    - name: Run tests
+      run: pytest tests/ -v
+      shell: bash
+
+    - name: Vulnerability scan
+      uses: aquasecurity/trivy-action@0.35.0
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        severity: ${{ inputs.trivy-severity }}
+        exit-code: '1'

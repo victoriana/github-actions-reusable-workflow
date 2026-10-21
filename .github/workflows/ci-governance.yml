@@ -1,0 +1,56 @@
+name: Reusable CI Governance
+
+on:
+  workflow_call:
+    inputs:
+      python-versions:
+        description: 'JSON array of Python versions to test'
+        type: string
+        required: false
+        default: '["3.10", "3.11", "3.12"]'
+      trivy-severity:
+        description: 'Severity levels that fail the build'
+        type: string
+        required: false
+        default: 'HIGH,CRITICAL'
+      run-docker-build:
+        description: 'Build Docker image after tests pass'
+        type: boolean
+        required: false
+        default: false
+      docker-image-name:
+        description: 'Name for the built image'
+        type: string
+        required: false
+        default: 'app'
+    secrets:
+      GEMINI_API_KEY:
+        description: 'Optional API key for live integration tests'
+        required: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ${{ fromJSON(inputs.python-versions) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run governance checks
+        uses: ./.github/actions/eval-action
+        with:
+          python-version: ${{ matrix.python-version }}
+          trivy-severity: ${{ inputs.trivy-severity }}
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+  docker:
+    needs: test
+    if: inputs.run-docker-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t ${{ inputs.docker-image-name }} .
